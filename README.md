@@ -163,10 +163,12 @@ Sample Response (extract access token value):
 Execution Request:
 
 *  Replace Bearer value with access_token value and offlineToken with the server offline token. 
-* assetId is unique to your environment and can be found using the developer tools in your browser when executing a test
-* tags takes the value you wish to use when labelling the test execution, use this to mimic an external tool execution ID
+*  assetId is unique to your environment and can be found using the developer tools in your browser when executing a test
+*  tags takes the value you wish to use when labelling the test execution, use this to mimic an external tool execution ID
+*  environment name if required by API & Postman tests only
+*  project id is unique to your environment and can be found using the developer tools in your browser when executing a test
 
-<code>Curl -H "Content-Type: application/json" -H "Authorization: Bearer __access token__" -d '{"testAsset":{"assetId":"0211c4b0-974c-4c3a-91c4-b0974cdc3ad7","revision":"main","requestedVersion":null},"tags":["__Build ID 000148__"],"environment":"Commerce React Store PRIVATE","remoteLocations":[],"offlineToken":"__offline token from OTS__"}' https://onetestserverhostname/rest/projects/1250/executions/</code>
+<code>Curl -H "Content-Type: application/json" -H "Authorization: Bearer __access token__" -d '{"testAsset":{"assetId":"__asset id__","revision":"main","requestedVersion":null},"tags":["__Build ID 000148__"],"environment":"__environment name__","remoteLocations":[],"offlineToken":"__offline token from OTS__"}' https://onetestserverhostname/rest/projects/__projectid__/executions/</code>
 
 </details>
 
