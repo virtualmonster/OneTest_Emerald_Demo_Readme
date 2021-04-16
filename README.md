@@ -3,21 +3,25 @@
 
 ## **Overview**
 
-In this demo, you will learn how to setup and configure the OneTest Server and HCL Commerce demo using the Emerald store front. Pre created API, UI and Performance tests are provided for simplicity and can be executed in the SoFy sandbox to demonstrate the key features of OneTest Server. It does not cover test authoring flows which require the OneTest UI/Performance and API workbench tools, however there is nothing to stop you setting up the workspaces on your local machine in order to show the test assets.
+In this demo, you will learn how to setup and configure the OneTest Server and HCL Commerce demo using the Emerald store front. Pre created API, UI and Performance tests are provided for simplicity and can be executed in the SoFy sandbox to demonstrate the key features of OneTest Server. 
+
+This demo does not cover test authoring flows which require the OneTest UI/Performance and API workbench tools, however there is nothing to stop you setting up the workspaces on your local machine in order to show the test assets. Service Virtualization support will be added in future updates
 
 <details><summary>Pre-requisites</summary>
 
-* You'll need a GitHub account to fork the provided test repositories. 
+* A GitHub account where you can fork the provided test repositories. 
 
 * Optionally, you will have the OneTest workbench products installed on your machine
 
-Approximately 20 to 30 minutes of preparation time is needed before you'll be ready to demo. The large majority of this time is waiting for the Emerald demo application to start and prepare the store front data and indexes. Additionally, if you wish to show existing test reports as a part of the demo, you will need to budget for around 20 minutes of test execution time in order to run the tests and generate reports.
+* Approximately 20 to 30 minutes of preparation time is needed before you'll be ready to demo. The large majority of this time is waiting for the Emerald demo application to start and prepare the store front data and indexes. 
+
+* If you wish to show existing test reports as a part of the demo, you will need to budget for around 10 minutes of test execution time in order to run tests and generate reports.
 
 </details>
 
 <details><summary>Setting up the Emerald/OneTest solution</summary>
 
-In the SoFy catalog, create a new solution by adding HCL Commerce and HCL OneTest Server
+In the SoFy catalog, create a solution by adding HCL Commerce and HCL OneTest Server. This demo has been tested with the following versions:
 
 | Catalog Tile Name| Version|
 | --- | --- |
@@ -25,12 +29,13 @@ In the SoFy catalog, create a new solution by adding HCL Commerce and HCL OneTes
 | HCL OneTest Server | 10.1.3 |
 
 
-Once the solution is built, deploy it to the sandbox. After a minute or two, when the solution console is available, login and monitor the solution content tiles. 
+Once the solution is built, deploy it to the SoFy sandbox. After a minute or two, when the solution console is available, login and monitor the solution content tiles. 
 
-Emerald will take a while longer to startup, but we can start to prepare the OneTest Server as soon as the solution console indicates it is ready. You should see a tick overlaid on the tile, and the link to launch the OneTest Server dashboard is available by clicking into the 'General Information' section.
+Emerald can take 20 to 30 minutes to become fully ready, but we can start to prepare the OneTest Server as soon as the solution console indicates it is available. You will see a tick overlaid on the OneTest Server tile, and the link to launch the OneTest Server dashboard is then available by clicking into the 'General Information' section.
 
-When the Emerald application is ready, take a note of the hostname it has been given. It will look something like 'commerce-preview.sbx0029.play.sofy.dev', where the value sbx0029 is unique to your sandbox. 
-In the solution console, navigate to the to the Kubernetes Resources page and click on the pods widget to access the various resources. Select 'Services' at the top of the page and search for 'prometheus' - one service should be listed which displays the Cluster IP value and Port. Take note of the IP/Port for later use.
+When the Emerald application is ready, **take a note of the hostname** it has been given. It will look something like 'commerce-preview.sbx1324.play.hclsofy.com', where the value sbx1324 is unique to your sandbox. 
+
+In the solution console, navigate to the to the Kubernetes Resources page and click on the pods widget to access the various resources. Select 'Services' at the top of the page and search for 'prometheus' - one service should be listed which displays the Cluster IP value and Port. **Take note of the IP/Port for later use**.
 
 </details>
 
@@ -38,22 +43,22 @@ In the solution console, navigate to the to the Kubernetes Resources page and cl
 
 Once the OneTest Server dashboard is visible, you'll need to register yourself as a user by following the "Sign up" link.
 
-Once logged in, configure the 'TeamSpace' repository under **Manage...>Configuration...>Repository** to include the provided Emerald_SystemModel.git repository from your own GitHub account.
+Once logged in, configure the 'TeamSpace' repository under **Manage...>Configuration...>Repository** to include the provided Emerald_SystemModel.git repository from your own GitHub account. This loads a system model representing the Emerald application. For the moment, there is not much to show here, but in future releases we will make use of the model to help guide the demo and associated test artefacts.
 
 Next, create a project named 'Emerald' where we will begin to add the test assets. Under the Project 'Configuration' tab you'll find 'Repositories'. Add the bulk of the provided repositories at this preparation stage, leaving at least one that can be loaded as a part of your demo later since this is somewhat interesting for prospects to see. [Suggestion, leave the API Test repository until the live demo since these tests can be executed quickly]
 
 Download the zip file from the Emerald_Data.git repository and import it into the Data Fabrication (**Author...>Data Fabrication**) perspective using the "import into workspace" wizard and loading the file Emerald Data Fabrication Workspace.zip. This workspace includes a "User" data dictionary that is pre-configured to generate a random firstname, lastname, email address and phone number which is used by one of our UI tests later in the demo.
 
-All of the pre-prepared tests have been configured to use static hostnames (kubernetes internal service names) where possible. This means that you don't need to edit the tests before running them. However, UI tests are a little different and require the (dynamic) Emerald public hostname. In future, the UI tests will also use static internal service names, but at the moment this cannot be achieved due to the internal services presenting a self signed certificate. Before executing the UI Tests "Register Users" and "Login Add Item & Checkout" you must add two variables to each test; 'hostname' and 'port_num'. Add these by navigating to the 'Execution' perspective, locating the tests and opening the execute dialog. Under the 'Variables' section you can add the two variables hostname and port_num, setting the values as per your Emerald deployment. Once you execute the test for the first time, these variables become 'sticky' and persist so that you won't need to enter them again.
+All of the pre-prepared tests have been configured to use static hostnames (kubernetes internal service names) where possible. This means that you don't need to edit the tests before running them, even though your environment changes each time you start a SoFy solution. However, UI tests are a little different and require the (dynamic) Emerald public hostname. In future, the UI tests will also use static internal service names, but at the moment this cannot be achieved due to the use of self signed certificates for all services behind the ingress controller in SoFy. To mitigate this, and before executing the UI Tests "Register Users" and "Login Add Item & Checkout" you must add two variables to each test; 'hostname' and 'port_num'. Add these by navigating to the 'Execution' perspective, locating the tests and opening the execute dialog. Under the 'Variables' section you can add the two variables hostname and port_num, setting the values as per your Emerald deployment. Once you execute the test for the first time, these variables become 'sticky' and persist so that you won't need to enter them again.
 
 | Variable Name | Value |
 | --- | --- |
-|hostname |  commerce-preview.sbx0029.play.sofy.dev |
+|hostname |  Emerald public hostname |
 |port_num | 443 |
 
-The Postman test suite 'Personalized Shopping Experience' also suffers from failure when presented with a self signed certificate. Adding the argument <code>--insecure</code> in the 'Program Arguments' section of the Execution dialog, under Advanced settings. This argument needs to be set once only and is persisted via sticky settings for subsequent execution.
+The Postman test suite 'Personalized Shopping Experience' also suffers from execution failure when presented with a SoFy self signed certificate. Adding the argument <code>--insecure</code> in the 'Program Arguments' section of the Execution dialog, under Advanced Settings solves this issue. This argument needs to be set once only and is persisted via sticky settings for subsequent execution.
 
-If you have time, run the tests in advance of your demo and schedule one or two for a later date so they populate  Overview page 'Scheduled Runs' widget. Consider labelling the test executions with meaningful information that your customer can relate to, eg "HCL Launch ID 100045", "HCL Launch ID 100047", "Azure Pipeline ID 100001", "Build ID 3524", "1.7.3 Sprint 3" etc..
+If you have time, make sure to run the tests in advance of your demo and schedule one or two for a later date to populate the Overview page 'Scheduled Runs' widget. Consider labelling the test executions with meaningful information that your customer can relate to, eg "HCL Launch ID 100045", "HCL Launch ID 100047", "Azure Pipeline ID 100001", "Build ID 3524", "1.7.3 Sprint 3" etc..
 
 >Make sure to run the "Register Users" UI test in advance of "Login Add Item & Checkout" since the users must be added to the Emerald system before a full checkout process is executed
 
